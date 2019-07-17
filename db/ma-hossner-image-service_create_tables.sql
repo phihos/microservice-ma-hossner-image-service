@@ -7,8 +7,8 @@
 -- Table structure for table Images.
 --
 CREATE TABLE .Images (
-  id INT ,
   imageData TEXT ,
+  id INT ,
 CONSTRAINT id_PK PRIMARY KEY (id)
  
 );
