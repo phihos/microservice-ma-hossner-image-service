@@ -1,6 +1,6 @@
 package i5.las2peer.services.images;
 
-import java.io.Serializable;
+
 import java.net.HttpURLConnection;
 
 import javax.ws.rs.DELETE;
@@ -20,7 +20,8 @@ import i5.las2peer.api.ServiceException;
 import i5.las2peer.api.logging.MonitoringEvent;
 import i5.las2peer.restMapper.RESTService;
 import i5.las2peer.restMapper.annotations.ServicePath;
-
+import i5.las2peer.services.images.database.DatabaseManager;
+import java.sql.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -50,6 +51,14 @@ import java.util.Map;
 public class Images extends RESTService {
 
 
+  /*
+   * Database configuration
+   */
+  private String jdbcDriverClassName;
+  private String jdbcLogin;
+  private String jdbcPass;
+  private String jdbcUrl;
+  private static DatabaseManager dbm;
 
 
 
@@ -57,7 +66,8 @@ public class Images extends RESTService {
 	super();
     // read and set properties values
     setFieldValues();
-    
+        // instantiate a database manager to handle database connection pooling and credentials
+    dbm = new DatabaseManager(jdbcDriverClassName, jdbcLogin, jdbcPass, jdbcUrl);
   }
 
   @Override
@@ -71,9 +81,9 @@ public class Images extends RESTService {
 
   @Api
   @SwaggerDefinition(
-      info = @Info(title = "ma-hossner-image-service", version = "$Metadata_Version$",
-          description = "$Metadata_Description$",
-          termsOfService = "$Metadata_Terms$",
+      info = @Info(title = "ma-hossner-image-service", version = "1",
+          description = "Simple image hosting service.",
+          termsOfService = "",
           contact = @Contact(name = "Philipp Hossner", email = "CAEAddress@gmail.com") ,
           license = @License(name = "BSD",
               url = "https://github.com/CAE-Community-Application-Editor/microservice-ma-hossner-image-service/blob/master/LICENSE.txt") ) )
@@ -107,12 +117,6 @@ public class Images extends RESTService {
 
     // service method invocations
 
-    try {
-      Object allImages = Context.getCurrent().invoke(
-          "ImageService", "getImages");
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
 
 
 
